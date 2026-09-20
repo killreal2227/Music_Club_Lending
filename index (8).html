@@ -1299,12 +1299,50 @@
     }
   });
 
-  document.getElementById('leadForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    // ЗАМЕНИТЬ: здесь подключить отправку в CRM / Telegram-бота вместо имитации успеха
-    this.style.display = 'none';
+  document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const form = this;
+  const button = form.querySelector('button[type="submit"]');
+
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const direction = document.getElementById('direction').value;
+
+  button.disabled = true;
+  button.textContent = 'Отправляем...';
+
+  try {
+    const response = await fetch('/api/lead', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        phone,
+        direction
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Ошибка отправки');
+    }
+
+    form.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
-  });
+
+  } catch (error) {
+    console.error(error);
+
+    button.disabled = false;
+    button.textContent = 'Записаться на пробный урок';
+
+    alert('Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.');
+  }
+});
 
   // мобильное меню - надёжный обработчик (без inline onclick, который иногда
   // блокируется в мобильных браузерах/вебвью с более строгими настройками)
