@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+  // применяем тему ДО отрисовки страницы, чтобы не было мигания:
+  // сначала смотрим сохранённый выбор пользователя, иначе - системную тему
+  (function () {
+    try {
+      var saved = localStorage.getItem('mc-theme');
+      var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Club - школа музыки в Калуге. Бесплатный пробный урок</title>
+<meta name="description" content="Школа музыки Music Club в Калуге: вокал, гитара, барабаны, фортепиано, актёрское мастерство, ораторское искусство. Для детей и взрослых. Бесплатный пробный урок.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* тот же нейтральный фиолетовый, но заметно насыщеннее и с одним
+       дополнительным оттенком (violet-soft-2), чтобы секции чередовались
+       разнообразнее, а не выглядели одним сплошным серым пятном */
+    --cream:#F1EEF7;
+    --cream-deep:#E0D9EC;
+    --ink:#292136;
+    --ink-soft:rgba(41,33,54,0.68);
+    --violet:#7A5DAC;
+    --violet-dark:#5C418B;
+    --violet-soft:#CFC6E7;
+    --violet-soft-2:#E6DEED;
+    --plum-dark:#36294C;
+    --concert-bg:#5B427B;
+    --header-bg:#3C2F5B;
+    --line:rgba(41,33,54,0.13);
+    --surface:#F9F8FB;
+    --on-dark:#F9F8FB;
+    --radius:4px;
+    --radius-btn:14px;
+  }
+  :root[data-theme="dark"]{
+    --cream:#1F1A28;
+    --cream-deep:#292334;
+    --ink:#ECE8F3;
+    --ink-soft:rgba(236,232,243,0.68);
+    --violet:#A58ECC;
+    --violet-dark:#C1AFDE;
+    --violet-soft:#322A41;
+    --violet-soft-2:#241E30;
+    --plum-dark:#130F1A;
+    --concert-bg:#31273F;
+    --header-bg:#15111D;
+    --line:rgba(236,232,243,0.13);
+    --surface:#2E273A;
+    --on-dark:#ECE8F3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --cream:#1F1A28;
+      --cream-deep:#292334;
+      --ink:#ECE8F3;
+      --ink-soft:rgba(236,232,243,0.68);
+      --violet:#A58ECC;
+      --violet-dark:#C1AFDE;
+      --violet-soft:#322A41;
+      --violet-soft-2:#241E30;
+      --plum-dark:#130F1A;
+      --concert-bg:#31273F;
+      --header-bg:#15111D;
+      --line:rgba(236,232,243,0.13);
+      --surface:#2E273A;
+      --on-dark:#ECE8F3;
+    }
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  svg{stroke-linecap:round;stroke-linejoin:round;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 6% 18%, rgba(122,93,172,0.05) 0, transparent 40%),
+      radial-gradient(circle at 96% 8%, rgba(122,93,172,0.045) 0, transparent 38%),
+      radial-gradient(circle at 94% 70%, rgba(122,93,172,0.05) 0, transparent 42%),
+      radial-gradient(circle at 3% 82%, rgba(122,93,172,0.045) 0, transparent 40%),
+      var(--cream);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{
+    font-family:'Unbounded',sans-serif;
+    font-weight:600;
+    line-height:1.16;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  h3{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    line-height:1.2;
+    margin:0;
+  }
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 24px;}
+  section{padding:88px 0;}
+  @media (max-width:640px){section{padding:56px 0;}}
+
+  /* ---------- scroll-in animation ---------- */
+  /* Контент виден по умолчанию. Скрываем его ТОЛЬКО когда JS подтвердил готовность
+     проиграть анимацию (класс .js-anim на html) - так страница никогда не останется
+     пустой, если скрипт не выполнится или IntersectionObserver не сработает. */
+  .reveal, .reveal-stagger > *{opacity:1;transform:none;}
+  html.js-anim .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease;}
+  html.js-anim .reveal.in-view{opacity:1;transform:translateY(0);}
+  html.js-anim .reveal-stagger > *{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
+  html.js-anim .reveal-stagger.in-view > *{opacity:1;transform:translateY(0);}
+  .reveal-stagger.in-view > *:nth-child(1){transition-delay:.02s;}
+  .reveal-stagger.in-view > *:nth-child(2){transition-delay:.08s;}
+  .reveal-stagger.in-view > *:nth-child(3){transition-delay:.14s;}
+  .reveal-stagger.in-view > *:nth-child(4){transition-delay:.2s;}
+  .reveal-stagger.in-view > *:nth-child(5){transition-delay:.26s;}
+  .reveal-stagger.in-view > *:nth-child(6){transition-delay:.32s;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal,.reveal-stagger > *{opacity:1 !important;transform:none !important;transition:none !important;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--header-bg);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 24px;max-width:1240px;margin:0 auto;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+  }
+  .logo img{height:30px;width:auto;display:block;}
+  .logo span{
+    font-family:'Unbounded',sans-serif;font-weight:700;font-size:17px;color:var(--on-dark);
+    letter-spacing:0.02em;line-height:1;display:block;
+  }
+  nav.main-nav{display:flex;align-items:center;gap:32px;}
+  nav.main-nav a{
+    font-size:15px;color:rgba(246,241,230,0.78);font-weight:600;
+    transition:color .15s ease;line-height:1;
+  }
+  nav.main-nav a:hover{color:var(--on-dark);}
+  .header-right{display:flex;align-items:center;gap:20px;}
+  .phone-link{font-weight:700;font-size:15px;white-space:nowrap;color:var(--on-dark);line-height:1;}
+  .header-right .btn{background:var(--surface);color:var(--violet-dark);}
+  .header-right .btn:hover{background:var(--cream);}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--violet);color:var(--on-dark);
+    padding:13px 24px;border-radius:var(--radius-btn);
+    font-weight:700;font-size:15px;border:none;cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+    font-family:'Manrope',sans-serif;line-height:1;
+  }
+  .btn:hover{background:var(--violet-dark);}
+  .btn:active{transform:scale(0.98);}
+  .btn-lg{padding:17px 32px;font-size:16px;}
+  .btn-outline{
+    background:transparent;color:var(--ink);border:1.5px solid var(--ink);
+    border-radius:var(--radius-btn);
+  }
+  .btn-outline:hover{background:var(--ink);color:var(--cream);}
+
+  /* мягкая пульсация для главных CTA, чтобы привлекать внимание */
+  @keyframes btn-pulse{
+    0%{box-shadow:0 0 0 0 rgba(122,93,172,0.45);}
+    70%{box-shadow:0 0 0 12px rgba(122,93,172,0);}
+    100%{box-shadow:0 0 0 0 rgba(122,93,172,0);}
+  }
+  .btn-pulse{animation:btn-pulse 2.6s ease-out infinite;}
+  .btn-pulse:hover{animation-play-state:paused;}
+  @media (prefers-reduced-motion: reduce){
+    .btn-pulse{animation:none;}
+  }
+
+  .menu-toggle{
+    display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--on-dark);
+    align-items:center;justify-content:center;
+  }
+  .theme-toggle{
+    background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.16);cursor:pointer;
+    width:42px;height:42px;padding:0;color:var(--on-dark);
+    display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;
+    transition:background .15s ease;
+  }
+  .theme-toggle:hover{background:rgba(255,255,255,0.22);}
+  .theme-toggle svg{width:22px;height:22px;display:block;flex-shrink:0;}
+  .theme-toggle .icon-moon{display:none;}
+  :root[data-theme="dark"] .theme-toggle .icon-sun{display:none;}
+  :root[data-theme="dark"] .theme-toggle .icon-moon{display:block;}
+  .menu-toggle svg{width:26px;height:26px;display:block;}
+  .menu-toggle .icon-close{display:none;}
+  .menu-toggle.open .icon-burger{display:none;}
+  .menu-toggle.open .icon-close{display:block;}
+
+  /* один breakpoint: выше - полная навигация, ниже - только лого + гамбургер
+     (никаких промежуточных состояний, где ссылки перенасены или дублируются кнопки) */
+  @media (max-width:1199px){
+    nav.main-nav{display:none;}
+    .phone-link{display:none;}
+    .header-right .btn{display:none;}
+    .menu-toggle{display:flex;}
+  }
+  @media (max-width:480px){
+    .header-inner{padding:12px 16px;}
+    .logo span{font-size:14px;letter-spacing:0.01em;}
+    .logo img{height:24px;}
+    .header-right{gap:10px;}
+  }
+
+  /* мобильное меню - полноэкранная панель поверх страницы, а не просто раскрытие вниз */
+  .mobile-nav{
+    display:none;
+    flex-direction:column;
+    position:fixed;
+    top:var(--header-h, 64px);left:0;right:0;bottom:0;
+    background:var(--cream);
+    z-index:45;
+    overflow-y:auto;
+    padding-bottom:24px;
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{
+    padding:18px 24px;border-top:1px solid var(--line);
+    font-weight:600;color:var(--ink);font-size:16px;
+  }
+  .mobile-nav .mobile-cta{
+    margin:20px 24px 6px;padding:15px 20px;border-top:none;
+    color:var(--on-dark) !important;
+  }
+  body.menu-open{overflow:hidden;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:72px 0 96px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center;
+  }
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;gap:40px;}}
+  .eyebrow{
+    font-size:15px;color:var(--ink-soft);font-weight:600;margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(30px,4vw,48px);
+    color:var(--ink);
+    margin-bottom:22px;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--ink-soft);max-width:520px;margin-bottom:32px;
+  }
+  .hero-cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:36px;}
+  .hero-note{font-size:14px;color:var(--ink-soft);max-width:460px;}
+
+  .hero-visual{
+    position:relative;border-radius:6px;overflow:hidden;
+    aspect-ratio:4/5;background:var(--cream-deep);
+  }
+  .hero-visual img.venue-photo{
+    width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;
+    transition:transform .3s ease;
+  }
+  .hero-visual:hover img.venue-photo{transform:scale(1.03);}
+  .hero-visual::after{
+    content:"";position:absolute;right:16px;bottom:16px;width:38px;height:38px;
+    border-radius:50%;background:rgba(36,28,46,0.6);pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.3-4.3'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:center;background-size:18px;
+  }
+
+  /* ---------- USP marquee ---------- */
+  .usp-strip{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--cream-deep);padding:28px 0;
+  }
+  .usp-strip .wrap{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg, transparent, black 48px, black calc(100% - 48px), transparent);
+    mask-image:linear-gradient(90deg, transparent, black 48px, black calc(100% - 48px), transparent);
+  }
+  .usp-track{
+    display:flex;width:max-content;
+    animation:usp-marquee 42s linear infinite;
+    will-change:transform;
+  }
+  .usp-track:hover{animation-play-state:paused;}
+  .usp-group{display:flex;align-items:center;flex-shrink:0;}
+  .usp-item{
+    display:flex;align-items:center;gap:14px;white-space:nowrap;
+    margin-right:64px;
+  }
+  .usp-icon{
+    width:36px;height:36px;border-radius:50%;background:var(--plum-dark);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .usp-icon svg{width:18px;height:18px;stroke:var(--on-dark);}
+  .usp-item p{font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.4;max-width:340px;white-space:normal;}
+  @keyframes usp-marquee{
+    to{transform:translateX(calc(-1 * var(--marquee-distance, 50%)));}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .usp-strip .wrap{mask-image:none;-webkit-mask-image:none;}
+    .usp-track{animation:none;flex-wrap:wrap;width:100%;justify-content:center;}
+    .usp-track .usp-group:nth-of-type(2){display:none;}
+    .usp-group{flex-wrap:wrap;justify-content:center;row-gap:16px;}
+  }
+
+  /* ---------- section heading ---------- */
+  .section-head{max-width:640px;margin-bottom:48px;}
+  .section-head h2{font-size:clamp(24px,2.8vw,32px);margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft);font-size:16.5px;}
+
+  /* ---------- directions ---------- */
+  .directions-list{border-top:1px solid rgba(122,93,172,0.18);}
+  .direction-row{
+    display:grid;grid-template-columns:56px 1fr auto;gap:22px;align-items:center;
+    padding:24px 0;border-bottom:1px solid rgba(122,93,172,0.18);
+  }
+  .direction-icon{
+    display:flex;align-items:center;justify-content:center;
+    width:56px;height:56px;border-radius:50%;flex-shrink:0;
+    background:var(--surface);box-shadow:0 4px 14px rgba(46,33,61,0.1);
+  }
+  .direction-icon svg{width:26px;height:26px;stroke:var(--violet);}
+  .direction-icon-mask{
+    width:26px;height:26px;background-color:var(--violet);
+    -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+    -webkit-mask-position:center;mask-position:center;
+    -webkit-mask-size:contain;mask-size:contain;
+  }
+  .direction-name{font-size:19px;font-weight:800;font-family:'Manrope',sans-serif;}
+  .direction-desc{color:var(--ink-soft);font-size:15px;margin-top:4px;max-width:520px;}
+  .direction-cta{
+    width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(122,93,172,0.3);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .direction-cta svg{width:16px;height:16px;stroke:var(--ink);transition:stroke .15s ease;}
+  .direction-cta:hover{background:var(--violet);border-color:var(--violet);}
+  .direction-cta:hover svg{stroke:var(--on-dark);}
+  @media (max-width:640px){
+    .direction-row{grid-template-columns:44px 1fr;}
+    .direction-icon{width:44px;height:44px;}
+    .direction-icon svg{width:20px;height:20px;}
+    .direction-icon-mask{width:20px;height:20px;}
+    .direction-cta{display:none;}
+  }
+
+  /* ---------- steps ---------- */
+  .steps{background:var(--plum-dark);color:var(--on-dark);}
+  .steps .section-head p{color:rgba(233,230,239,0.68);}
+  .steps .section-head h2{color:var(--on-dark);}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+  @media (max-width:860px){.steps-grid{grid-template-columns:1fr;gap:32px;}}
+  .step-num{
+    font-family:'Unbounded',sans-serif;font-size:36px;font-weight:700;
+    color:var(--on-dark);
+    margin-bottom:16px;line-height:1;
+  }
+  .step h3{font-size:19px;color:var(--on-dark);margin-bottom:10px;font-family:'Manrope',sans-serif;}
+  .step p{color:rgba(246,241,230,0.68);font-size:15px;}
+
+  /* ---------- concerts (видео) ---------- */
+  .concerts-section{background:var(--concert-bg);}
+  .concerts-section .section-head p{color:rgba(255,255,255,0.72);}
+  .concerts-section .section-head h2{color:var(--on-dark);}
+  .concert-rating{
+    display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;
+    background:var(--surface);border-radius:10px;
+    padding:22px 28px;margin-bottom:36px;text-align:center;
+  }
+  .concert-rating .rating-num{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:700;color:var(--ink);}
+  .concert-rating p{color:var(--ink-soft);font-size:14.5px;}
+  .video-grid{display:flex;flex-direction:column;gap:20px;}
+  .video-pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:640px){.video-pair{grid-template-columns:1fr;}}
+  .video-card{
+    position:relative;border-radius:10px;overflow:hidden;cursor:pointer;background:#000;
+    display:block;width:100%;
+  }
+  .video-wide{aspect-ratio:16/9;}
+  .video-tall{aspect-ratio:9/16;}
+  .video-preview{width:100%;height:100%;object-fit:cover;display:block;}
+  .video-veil{position:absolute;inset:0;background:rgba(20,14,26,0.45);transition:opacity .3s ease;}
+  .video-card:hover .video-veil{opacity:0.1;}
+  .video-play{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.92);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--violet-dark);transition:background .2s ease, transform .2s ease;
+  }
+  .video-play svg{width:22px;height:22px;display:block;}
+  .video-card:hover .video-play{background:var(--surface);transform:translate(-50%,-50%) scale(1.08);}
+  .video-caption{
+    position:absolute;left:14px;bottom:14px;right:14px;color:var(--on-dark);font-weight:700;font-size:14px;
+    text-shadow:0 2px 8px rgba(0,0,0,0.7);pointer-events:none;
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .video-caption em{font-style:normal;font-weight:600;font-size:11.5px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.03em;}
+
+  /* ---------- social proof ---------- */
+  .proof-rating-banner{
+    display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:24px 28px;margin-bottom:36px;text-align:center;
+  }
+  .proof-stars{color:var(--violet);font-size:22px;letter-spacing:3px;}
+  .proof-rating-banner .rating-num{font-family:'Unbounded',sans-serif;font-size:26px;font-weight:700;}
+  .proof-rating-banner p{color:var(--ink-soft);font-size:14.5px;}
+
+  .gallery-title{font-size:16px;font-weight:800;margin:0 0 16px;font-family:'Manrope',sans-serif;}
+  .gallery-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:210px;gap:12px;
+  }
+  .gallery-grid figure{margin:0;position:relative;border-radius:8px;overflow:hidden;}
+  .gallery-grid img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease;}
+  .gallery-grid figure:hover img{transform:scale(1.05);}
+  .gallery-grid figcaption{
+    position:absolute;left:10px;bottom:10px;background:rgba(20,16,26,0.72);color:var(--on-dark);
+    font-size:12.5px;font-weight:600;padding:6px 11px;border-radius:var(--radius-btn);
+  }
+  .g-1{grid-column:span 2;grid-row:span 2;}
+  .g-2{grid-column:span 2;grid-row:span 2;}
+  .g-3{grid-column:span 2;grid-row:span 1;}
+  .g-4{grid-column:span 1;grid-row:span 1;}
+  .g-5{grid-column:span 1;grid-row:span 1;}
+  @media (max-width:760px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:140px;}
+    .g-1,.g-2,.g-3,.g-4,.g-5{grid-column:span 1;grid-row:span 1;}
+    .g-1{grid-column:span 2;grid-row:span 2;}
+  }
+
+  /* ---------- learning (Обучение) ---------- */
+  .learning-grid{display:flex;flex-direction:column;gap:32px;}
+  .learning-points{
+    list-style:none;margin:0;padding:0;
+    display:grid;grid-template-columns:1fr 1fr;gap:24px 40px;
+  }
+  @media (max-width:760px){.learning-points{grid-template-columns:1fr;}}
+  .learning-points li{display:flex;gap:14px;align-items:flex-start;}
+  .lp-icon{
+    width:38px;height:38px;border-radius:50%;background:var(--violet-soft);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    margin-top:2px;
+  }
+  .lp-icon svg{width:18px;height:18px;stroke:var(--violet);}
+  .learning-points b{display:block;font-size:15.5px;margin-bottom:3px;}
+  .learning-points p{color:var(--ink-soft);font-size:14.5px;line-height:1.5;}
+
+  /* ---------- audience ---------- */
+  .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+  @media (max-width:760px){.audience-grid{grid-template-columns:1fr;}}
+  .audience-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:24px;
+  }
+  .audience-photos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;border-radius:6px;overflow:hidden;}
+  .audience-photos img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 20%;display:block;transition:transform .3s ease;}
+  .audience-photos img:hover{transform:scale(1.04);}
+  .audience-photos img:first-child{grid-column:span 2;aspect-ratio:16/9;}
+  .audience-card h3{font-size:21px;margin-bottom:12px;}
+  .audience-card p{color:var(--ink-soft);font-size:15.5px;}
+
+  /* ---------- form ---------- */
+  .form-section{background:var(--cream-deep);}
+  .section-lilac{background:var(--violet-soft);}
+  .section-lilac-2{background:var(--violet-soft-2);}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  @media (max-width:860px){.form-grid{grid-template-columns:1fr;gap:36px;}}
+  .form-copy h2{font-size:clamp(24px,2.8vw,32px);margin-bottom:16px;}
+  .form-copy p{color:var(--ink-soft);font-size:16px;margin-bottom:24px;max-width:440px;}
+  .form-perks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+  .form-perks li{display:flex;gap:10px;font-size:15px;color:var(--ink);font-weight:600;}
+  .form-perks li::before{content:"-";color:var(--violet-dark);flex-shrink:0;}
+
+  form.lead-form{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:32px;
+  }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:7px;color:var(--ink);}
+  .field input,.field select{
+    width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:4px;
+    font-family:'Manrope',sans-serif;font-size:15px;background:var(--cream);color:var(--ink);
+  }
+  .field input:focus,.field select:focus{
+    outline:2px solid var(--violet);outline-offset:1px;border-color:var(--violet);
+  }
+  .phone-field{position:relative;}
+  .phone-field .phone-prefix{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    font-weight:700;color:var(--ink);pointer-events:none;font-size:15px;
+  }
+  .phone-field input{padding-left:38px;font-weight:700;}
+  @keyframes onAutoFillMC{from{opacity:1;}to{opacity:1;}}
+  .phone-field input:-webkit-autofill{animation-name:onAutoFillMC;animation-duration:0.001s;}
+  .checkbox-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;}
+  .checkbox-row input{width:16px;height:16px;margin-top:3px;flex-shrink:0;accent-color:var(--violet);}
+  .checkbox-row label{font-size:13px;color:var(--ink-soft);line-height:1.4;}
+  .checkbox-row a{text-decoration:underline;}
+  form.lead-form .btn{width:100%;}
+  .form-success{
+    display:none;text-align:center;padding:40px 20px;
+  }
+  .form-success.show{display:block;}
+  .form-success svg{width:44px;height:44px;color:var(--violet);margin:0 auto 16px;}
+  .form-success h3{font-size:20px;margin-bottom:8px;}
+  .form-success p{color:var(--ink-soft);font-size:15px;}
+
+  /* ---------- contacts ---------- */
+  .contacts-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:48px;}
+  @media (max-width:860px){.contacts-grid{grid-template-columns:1fr;}}
+  .contact-block{display:flex;flex-direction:column;gap:22px;}
+  .contact-row{display:flex;gap:14px;align-items:flex-start;}
+  .contact-icon{
+    width:38px;height:38px;border-radius:50%;background:var(--cream-deep);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .contact-icon svg{width:18px;height:18px;stroke:var(--violet);}
+  .contact-row h4{font-size:15px;margin:0 0 4px;font-family:'Manrope',sans-serif;font-weight:700;}
+  .contact-row p, .contact-row a{font-size:15px;color:var(--ink-soft);}
+  .contact-row a:hover{color:var(--violet-dark);}
+  .socials{display:flex;gap:12px;margin-top:6px;}
+  .socials a{
+    width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;transition:border-color .15s ease;
+  }
+  .socials a:hover{border-color:var(--violet);}
+  .socials svg{width:17px;height:17px;stroke:var(--ink);}
+  .social-vk{font-family:'Manrope',sans-serif;font-weight:800;font-size:12px;letter-spacing:0.02em;color:var(--ink);}
+  .map-frame{
+    position:relative;
+    border-radius:6px;overflow:hidden;
+    height:340px;
+    background:var(--cream-deep);
+  }
+  @media (min-width:861px){ .map-frame{height:100%;min-height:420px;} }
+  .map-frame iframe{width:100%;height:100%;border:0;display:block;}
+  .map-open-link{
+    position:absolute;left:14px;bottom:14px;z-index:2;
+    background:var(--surface);color:var(--ink);font-weight:700;font-size:13.5px;
+    padding:10px 16px;border-radius:var(--radius-btn);
+    box-shadow:0 8px 20px rgba(36,28,46,0.18);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .map-open-link:hover{background:var(--violet);color:var(--on-dark);}
+  .photo-note{font-size:13.5px;color:var(--ink-soft);margin-top:8px;}
+  .photo-note a{text-decoration:underline;}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:32px 0;}
+  .footer-inner{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  }
+  .footer-logo{display:flex;align-items:center;gap:8px;}
+  .footer-logo img{height:20px;width:auto;}
+  .footer-logo span{font-family:'Unbounded',sans-serif;font-weight:700;font-size:13px;color:var(--ink-soft);}
+  footer a{font-size:13.5px;color:var(--ink-soft);text-decoration:underline;}
+  footer p{font-size:13.5px;color:var(--ink-soft);}
+
+  /* ---------- modal (политика / согласие) ---------- */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:rgba(36,28,46,0.55);
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--surface);border-radius:10px;max-width:880px;width:100%;
+    max-height:88vh;display:flex;flex-direction:column;
+    box-shadow:0 30px 60px rgba(36,28,46,0.35);
+  }
+  .modal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 24px;border-bottom:1px solid var(--line);flex-shrink:0;
+  }
+  .modal-head h3{font-size:18px;}
+  .modal-close{
+    background:none;border:none;cursor:pointer;padding:6px;color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .modal-close:hover{color:var(--ink);}
+  .modal-close svg{width:20px;height:20px;}
+  .modal-body{padding:20px 24px 28px;overflow-y:auto;}
+  .modal-body h4{font-size:15px;margin:22px 0 8px;font-family:'Manrope',sans-serif;font-weight:800;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body p, .modal-body li{font-size:14.5px;color:var(--ink);line-height:1.6;}
+  .modal-body ul{margin:0 0 12px;padding-left:20px;}
+  .modal-body p{margin-bottom:12px;}
+  .modal-note{
+    background:var(--cream-deep);border-left:4px solid var(--violet);
+    padding:12px 16px;border-radius:4px;font-size:13.5px;color:var(--ink);margin-bottom:20px;
+  }
+
+  /* ---------- lightbox (фото-карусель + видео) ---------- */
+  .lightbox-overlay{
+    display:none;position:fixed;inset:0;z-index:300;
+    background:rgba(20,14,26,0.94);
+    align-items:center;justify-content:center;
+  }
+  .lightbox-overlay.open{display:flex;}
+  .lightbox-stage{
+    position:relative;max-width:min(92vw,1100px);max-height:86vh;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-img,.lightbox-video{
+    max-width:min(92vw,1100px);max-height:86vh;
+    display:none;border-radius:6px;background:#000;
+    object-fit:contain;
+  }
+  .lightbox-img.active,.lightbox-video.active{display:block;}
+  .lightbox-close{
+    position:absolute;top:18px;right:18px;z-index:2;
+    background:rgba(255,255,255,0.12);border:none;color:var(--on-dark);
+    width:42px;height:42px;border-radius:50%;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-close:hover{background:rgba(255,255,255,0.25);}
+  .lightbox-close svg{width:20px;height:20px;}
+  .lightbox-nav{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    background:rgba(255,255,255,0.12);border:none;color:var(--on-dark);
+    width:48px;height:48px;border-radius:50%;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox-nav:hover{background:rgba(255,255,255,0.25);}
+  .lightbox-nav svg{width:22px;height:22px;}
+  .lightbox-prev{left:-64px;}
+  .lightbox-next{right:-64px;}
+  @media (max-width:900px){
+    .lightbox-prev{left:6px;}
+    .lightbox-next{right:6px;}
+  }
+  .lightbox-counter{
+    position:absolute;bottom:-36px;left:50%;transform:translateX(-50%);
+    color:rgba(255,255,255,0.7);font-size:13px;font-weight:600;
+  }
+  /* курсор-подсказка на кликабельных фото */
+  [data-lightbox-src]{cursor:zoom-in;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#top" class="logo">
+      <img src="images/music-club.png" alt="Music Club">
+      <span>MUSIC&nbsp;CLUB</span>
+    </a>
+    <nav class="main-nav">
+      <a href="#directions">Направления</a>
+      <a href="#learning">Обучение</a>
+      <a href="#concerts">Концерты</a>
+      <a href="#how">Как проходит урок</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2.5 12H5M19 12h2.5M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </button>
+      <a href="tel:+79200988003" class="phone-link">+7 (920) 098-80-03</a>
+      <a href="#form" class="btn">Записаться</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false">
+        <svg class="icon-burger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="mobile-nav">
+  <a href="#form" class="btn mobile-cta">Записаться на пробный урок</a>
+  <a href="#directions">Направления</a>
+  <a href="#learning">Обучение</a>
+  <a href="#concerts">Концерты и атмосфера</a>
+  <a href="#how">Как проходит урок</a>
+  <a href="#contacts">Контакты</a>
+  <a href="tel:+79200988003">+7 (920) 098-80-03</a>
+</div>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="reveal-stagger reveal">
+          <p class="eyebrow">Школа музыки в Калуге · ул. Ленина, 79</p>
+          <h1>Первый урок, который покажет - ваше это или нет</h1>
+          <p class="hero-sub">Вокал, гитара, барабаны, фортепиано, актёрское мастерство и ораторское искусство. Занимаемся с детьми и взрослыми, с нуля и без нот в голове - просто приходите попробовать.</p>
+          <div class="hero-cta-row">
+            <a href="#form" class="btn btn-lg btn-pulse">Записаться на бесплатный урок</a>
+            <a href="tel:+79200988003" class="btn btn-outline btn-lg">Позвонить</a>
+          </div>
+          <p class="hero-note">Почувствуйте атмосферу школы на бесплатном пробном занятии - музыкальные знания и свой инструмент не нужны, всё найдётся у нас.</p>
+        </div>
+        <div class="hero-visual reveal" style="transition-delay:.1s">
+          <img class="venue-photo" src="images/resepshen-shkoly-music-club-v-kaluge.jpg" alt="Ресепшен школы Music Club в Калуге" data-lightbox-src data-lightbox-group="hero">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= USP (бегущая строка) ================= -->
+  <div class="usp-strip">
+    <div class="wrap">
+    <div class="usp-track">
+      <div class="usp-group">
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2L12 2z"/></svg></span>
+          <p>Пробный урок бесплатный - по одному направлению на выбор</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>
+          <p>6 направлений в школе</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span>
+          <p>Педагоги - практикующие музыканты и актёры</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <p>Индивидуально или в группе - как удобнее</p>
+        </div>
+      </div>
+      <div class="usp-group" aria-hidden="true">
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2L12 2z"/></svg></span>
+          <p>Пробный урок бесплатный - по одному направлению на выбор</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg></span>
+          <p>6 направлений в школе</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span>
+          <p>Педагоги - практикующие музыканты и актёры</p>
+        </div>
+        <div class="usp-item">
+          <span class="usp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          <p>Индивидуально или в группе - как удобнее</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ================= DIRECTIONS ================= -->
+  <section id="directions" class="section-lilac">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Шесть направлений - учим вживую, на настоящих инструментах</h2>
+        <p>В Music Club можно заниматься вокалом, гитарой, барабанами, фортепиано, актёрским мастерством и ораторским искусством - отдельно или сочетая несколько направлений сразу. Группы небольшие, инструменты - в классах, программы - под возраст и цель ученика.</p>
+      </div>
+      <div class="directions-list">
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-4.png);mask-image:url(images/image-3.png);"></span></span>
+          <div>
+            <div class="direction-name">Вокал</div>
+            <p class="direction-desc">Ставим голос, учим дышать и держать сцену - от первой песни для себя до выступлений.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на вокал"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-6.png);mask-image:url(images/image-5.png);"></span></span>
+          <div>
+            <div class="direction-name">Гитара</div>
+            <p class="direction-desc">От первых аккордов до собственного репертуара - акустика и электрогитара.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на гитару"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-8.png);mask-image:url(images/image-7.png);"></span></span>
+          <div>
+            <div class="direction-name">Барабаны</div>
+            <p class="direction-desc">Чувство ритма, координация и энергия - играем на реальной установке с первого занятия.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на барабаны"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-10.png);mask-image:url(images/image-9.png);"></span></span>
+          <div>
+            <div class="direction-name">Фортепиано</div>
+            <p class="direction-desc">Классика и современная музыка, нотная грамота и игра по слуху - в своём темпе.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на фортепиано"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-12.png);mask-image:url(images/image-11.png);"></span></span>
+          <div>
+            <div class="direction-name">Актёрское мастерство</div>
+            <p class="direction-desc">Раскрепощение, импровизация и работа с образом - полезно и на сцене, и в жизни.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на актёрское мастерство"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="direction-row reveal">
+          <span class="direction-icon"><span class="direction-icon-mask" style="-webkit-mask-image:url(images/image-14.png);mask-image:url(images/image-13.png);"></span></span>
+          <div>
+            <div class="direction-name">Ораторское искусство</div>
+            <p class="direction-desc">Уверенная речь, структура выступления и работа с голосом - для учёбы, работы и жизни.</p>
+          </div>
+          <a href="#form" class="direction-cta" aria-label="Записаться на ораторское искусство"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEARNING (Обучение) ================= -->
+  <section id="learning" style="background:var(--surface);">
+    <div class="wrap">
+      <div class="learning-grid">
+        <div class="section-head reveal">
+          <h2>Учёба, которая не заканчивается на «сыграл и забыл»</h2>
+          <p>Отдельная методичка есть, но держит учеников не она. Вот три вещи, из-за которых у нас задерживаются на годы, а не на пробный месяц.</p>
+        </div>
+
+        <ul class="learning-points reveal-stagger reveal">
+          <li>
+            <span class="lp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2L12 2z"/></svg></span>
+            <div><b>Педагоги, которых слышно не только на уроке</b><p>Наши преподаватели сами выходят на сцену - от квартирников в стиле 80-00-х до собственных проектов. Учат тому, что играют сегодня, а не пересказывают методичку.</p></div>
+          </li>
+          <li>
+            <span class="lp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span>
+            <div><b>Сцена - часть программы, а не бонус</b><p>Отчётные концерты, мини-джемы и тематические квартирники - несколько раз в год. Первое живое выступление обычно случается быстрее, чем кажется самому ученику.</p></div>
+          </li>
+          <li>
+            <span class="lp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+            <div><b>Группы на 3-5 человек</b><p>Достаточно места, чтобы педагог услышал и поправил каждого, и достаточно партнёров по игре, чтобы почувствовать вкус настоящего ансамбля.</p></div>
+          </li>
+          <li>
+            <span class="lp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
+            <div><b>Здесь помнят, что вы играли в прошлый раз</b><p>Без «повторим с нуля» на каждом занятии - прогресс продолжается, а не начинается заново каждую неделю.</p></div>
+          </li>
+        </ul>
+
+        <div class="reveal">
+          <div class="gallery-grid reveal-stagger reveal">
+            <figure class="g-1">
+              <img src="images/master-klass-po-gitare-v-music-club.jpg" alt="Мастер-класс по гитаре в Music Club" style="object-position:center 30%;" data-lightbox-src data-lightbox-group="learning">
+              <figcaption>Мастер-класс по гитаре</figcaption>
+            </figure>
+            <figure class="g-2">
+              <img src="images/barabannyy-battl-v-music-club.jpg" alt="Барабанный баттл в Music Club" style="object-position:center 30%;" data-lightbox-src data-lightbox-group="learning">
+              <figcaption>Барабанный баттл</figcaption>
+            </figure>
+            <figure class="g-3">
+              <img src="images/muzykalnyy-dzhem-uchenikov-music-club.jpg" alt="Музыкальный джем учеников Music Club" style="object-position:center 35%;" data-lightbox-src data-lightbox-group="learning">
+              <figcaption>Музыкальный джем</figcaption>
+            </figure>
+            <figure class="g-4">
+              <img src="images/zakulise-otchetnogo-koncerta-music-club.jpg" alt="Закулисье отчётного концерта Music Club" style="object-position:40% 30%;" data-lightbox-src data-lightbox-group="learning">
+              <figcaption>Закулисье отчётного концерта</figcaption>
+            </figure>
+            <figure class="g-5">
+              <img src="images/zriteli-na-koncerte-music-club.jpg" alt="Зрители на концерте Music Club" style="object-position:center 35%;" data-lightbox-src data-lightbox-group="learning">
+              <figcaption>Наши зрители</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AUDIENCE ================= -->
+  <section class="section-lilac-2">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Для детей и взрослых</h2>
+        <p>Программы отличаются темпом и подачей, а не серьёзностью подхода.</p>
+      </div>
+      <div class="audience-grid">
+        <div class="audience-card reveal">
+          <div class="audience-photos">
+            <img src="images/yunyy-uchenik-music-club-na-scene.jpg" alt="Юный ученик Music Club на сцене" data-lightbox-src data-lightbox-group="kids">
+            <img src="images/yunaya-vokalistka-music-club-na-scene.jpg" alt="Юная вокалистка Music Club на сцене" data-lightbox-src data-lightbox-group="kids">
+            <img src="images/yunaya-uchenica-music-club-s-gitaroy.jpg" alt="Юная ученица Music Club с гитарой" data-lightbox-src data-lightbox-group="kids">
+          </div>
+          <h3>Детям и подросткам</h3>
+          <p>Учим играть и петь через игру и поддержку, а не через оценки. Первые результаты - уже после нескольких занятий, а дальше - выступления и уверенность в себе.</p>
+        </div>
+        <div class="audience-card reveal" style="transition-delay:.15s">
+          <div class="audience-photos">
+            <img src="images/vzroslyy-uchenik-music-club-na-scene.jpg" alt="Взрослый ученик Music Club на сцене" data-lightbox-src data-lightbox-group="adults">
+            <img src="images/vzroslaya-uchenica-music-club-na-barabanah.jpg" alt="Взрослая ученица Music Club на барабанах" data-lightbox-src data-lightbox-group="adults">
+            <img src="images/vzroslaya-uchenica-music-club-s-mikrofonom.jpg" alt="Взрослая ученица Music Club с микрофоном" data-lightbox-src data-lightbox-group="adults">
+          </div>
+          <h3>Взрослым</h3>
+          <p>Учиться музыке никогда не поздно. Без давления и сравнения с «идеальным слухом» - в своём темпе, ради удовольствия или осознанной цели.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONCERTS (Концерты и атмосфера) ================= -->
+  <section id="concerts" class="concerts-section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Концерты и атмосфера</h2>
+        <p>Наши ученики не просто занимаются в классе - они регулярно выступают: отчётные концерты, квартирники, мастер-классы. Видео - в нашей группе VK, открываются в новой вкладке.</p>
+      </div>
+
+      <div class="concert-rating reveal">
+        <div class="proof-stars">★★★★★</div>
+        <div class="rating-num">5,0</div>
+        <p>Рейтинг школы на Яндекс Картах</p>
+        <a href="https://yandex.ru/maps/?text=Music%20Club%20Калуга%20улица%20Ленина%2079" target="_blank" rel="noopener" class="btn btn-outline">Читать отзывы</a>
+      </div>
+
+      <div class="video-grid reveal-stagger reveal">
+        <a class="video-card video-wide" href="https://vkvideo.ru/video663079814_456239072" target="_blank" rel="noopener">
+          <img class="video-preview" src="images/otchetnyy-koncert-music-club.jpg" alt="Отчётный концерт Music Club">
+          <div class="video-veil"></div>
+          <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <span class="video-caption">Отчётный концерт <em>смотреть в VK</em></span>
+        </a>
+
+        <div class="video-pair">
+          <a class="video-card video-tall" href="https://vk.ru/clip663079814_456239073" target="_blank" rel="noopener">
+            <img class="video-preview" src="images/master-klass-po-gitare-music-club.jpg" alt="Мастер-класс по гитаре Music Club">
+            <div class="video-veil"></div>
+            <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></span>
+            <span class="video-caption">Мастер-класс по гитаре <em>смотреть в VK</em></span>
+          </a>
+
+          <a class="video-card video-tall" href="https://vk.ru/clip663079814_456239074" target="_blank" rel="noopener">
+            <img class="video-preview" src="images/kvartirnik-80-e-00-e-music-club.jpg" alt="Квартирник 80-е-00-е Music Club">
+            <div class="video-veil"></div>
+            <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></span>
+            <span class="video-caption">Квартирник 80-е-00-е <em>смотреть в VK</em></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STEPS ================= -->
+  <section class="steps" id="how">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Как проходит бесплатный пробный урок</h2>
+        <p>Три простых шага - от заявки до первого занятия с инструментом в руках.</p>
+      </div>
+      <div class="steps-grid reveal-stagger reveal">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Оставляете заявку</h3>
+          <p>Имя и телефон - ничего лишнего. Форма ниже займёт меньше минуты.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Администратор свяжется с вами</h3>
+          <p>Поможет выбрать направление и предложит удобный день и время.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Приходите и пробуете</h3>
+          <p>Занятие идёт 1 час. Инструмент выдадим на месте - приходить со своим не нужно.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FORM ================= -->
+  <section class="form-section" id="form">
+    <div class="wrap">
+      <div class="form-grid">
+        <div class="form-copy reveal">
+          <h2>Записаться на бесплатный пробный урок</h2>
+          <p>Оставьте контакты - администратор свяжется с вами, чтобы подобрать направление и удобное время.</p>
+          <ul class="form-perks">
+            <li>Пробное занятие - бесплатно, прийти можно уже на этой неделе</li>
+            <li>Поможем выбрать направление, если ещё не решили</li>
+            <li>Перезвоним в день заявки</li>
+          </ul>
+        </div>
+
+        <div class="reveal" style="transition-delay:.1s">
+          <form class="lead-form" id="leadForm">
+            <div class="field">
+              <label for="name">Имя</label>
+              <input type="text" id="name" name="name" placeholder="Как вас зовут" required>
+            </div>
+            <div class="field">
+              <label for="phone">Телефон</label>
+              <div class="phone-field">
+                <span class="phone-prefix">+7</span>
+                <input type="tel" id="phone" name="phone" placeholder="(___) ___-__-__" inputmode="numeric" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="direction">Направление</label>
+              <select id="direction" name="direction">
+                <option value="">Пока не решил(а) - посоветуйте</option>
+                <option>Вокал</option>
+                <option>Гитара</option>
+                <option>Барабаны</option>
+                <option>Фортепиано</option>
+                <option>Актёрское мастерство</option>
+                <option>Ораторское искусство</option>
+              </select>
+            </div>
+            <div class="checkbox-row">
+              <input type="checkbox" id="consent" required>
+              <label for="consent">Согласен(на) с <a href="#" data-modal="modalPolicy">политикой обработки персональных данных</a> и даю <a href="#" data-modal="modalConsent">согласие на обработку персональных данных</a></label>
+            </div>
+            <button type="submit" class="btn btn-lg btn-pulse">Записаться на пробный урок</button>
+          </form>
+
+          <div class="form-success" id="formSuccess">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            <h3>Заявка принята</h3>
+            <p>Мы перезвоним вам в течение дня, чтобы подобрать удобное время.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACTS ================= -->
+  <section id="contacts">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Как нас найти</h2>
+      </div>
+      <div class="contacts-grid">
+        <div class="contact-block reveal-stagger reveal">
+          <div class="contact-row">
+            <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.4 7-12a7 7 0 10-14 0c0 5.6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+            <div>
+              <h4>Адрес</h4>
+              <p>Калуга, ул. Ленина, д. 79</p>
+            </div>
+          </div>
+          <div class="contact-row">
+            <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .3 2 .6 2.9a2 2 0 01-.5 2.1L8 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.9.5 2.9.6a2 2 0 011.8 2.1z"/></svg></span>
+            <div>
+              <h4>Телефон</h4>
+              <a href="tel:+79200988003">+7 (920) 098-80-03</a>
+            </div>
+          </div>
+          <div class="contact-row">
+            <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+            <div>
+              <h4>Часы работы</h4>
+              <p>Ежедневно, 11:00-23:00</p>
+            </div>
+          </div>
+          <div class="contact-row">
+            <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+            <div>
+              <h4>Написать</h4>
+              <p><a href="mailto:musicclub40@yandex.ru">musicclub40@yandex.ru</a></p>
+              <div class="socials">
+                <a href="https://vk.com/musicclub.kaluga" target="_blank" rel="noopener" aria-label="ВК"><span class="social-vk">VK</span></a>
+                <a href="https://t.me/Musicclubkaluga" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.5 3.5L3.8 10.2c-1.1.45-1.1 1.08-.2 1.35l4.3 1.34 1.65 5.05c.2.55.35.77.72.77.36 0 .53-.16.73-.36l1.8-1.75 4.1 3c.7.4 1.2.19 1.4-.65l2.7-12.7c.28-1.15-.3-1.6-1.4-1.15z"/><path d="M9 12.9l9-6-7.3 7.5"/></svg></a>
+              </div>
+            </div>
+          </div>
+          <p class="photo-note">Больше фото школы - в отзывах на Яндекс Картах.</p>
+        </div>
+
+        <div class="map-frame reveal" style="transition-delay:.1s">
+          <iframe src="https://yandex.ru/map-widget/v1/?ll=36.263500%2C54.512700&z=17&pt=36.263500,54.512700,pm2vgl" loading="lazy"></iframe>
+          <a class="map-open-link" href="https://yandex.ru/maps/?text=Music%20Club%20Калуга%20улица%20Ленина%2079" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.4 7-12a7 7 0 10-14 0c0 5.6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Открыть в Яндекс Картах
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-logo">
+      <img src="images/music-club-2.png" alt="Music Club">
+      <span>MUSIC CLUB, КАЛУГА</span>
+    </div>
+    <a href="#" data-modal="modalPolicy">Политика обработки персональных данных</a>
+  </div>
+</footer>
+
+<script>
+  // бегущая строка: меряем реальную ширину одной группы в пикселях,
+  // чтобы анимация всегда была бесшовной (проценты "плывут" при зуме браузера)
+  var marqueeTrack = document.querySelector('.usp-track');
+  if (marqueeTrack) {
+    var syncMarquee = function () {
+      var group = marqueeTrack.querySelector('.usp-group');
+      if (group) marqueeTrack.style.setProperty('--marquee-distance', group.getBoundingClientRect().width + 'px');
+    };
+    syncMarquee();
+    window.addEventListener('load', syncMarquee);
+    window.addEventListener('resize', syncMarquee);
+  }
+
+  // маска телефона: "+7" - отдельный несъёмный префикс рядом с полем,
+  // само поле хранит только национальный номер. Курсор восстанавливается
+  // по количеству цифр слева от него, поэтому редактировать можно в любом
+  // месте номера, а не только в конце.
+  // Дополнительно: автозаполнение браузера иногда вставляет номер уже с
+  // кодом страны (+7/8) и не всегда честно генерирует событие "input" -
+  // поэтому слушаем ещё "change"/"blur" и всегда срезаем лишний 11-й код страны.
+  var phoneInput = document.getElementById('phone');
+  if (phoneInput) {
+    var formatPhoneField = function () {
+      var el = phoneInput;
+      var prevPos = el.selectionStart == null ? el.value.length : el.selectionStart;
+      var digitsBeforeCursor = el.value.slice(0, prevPos).replace(/\D/g, '').length;
+      var digits = el.value.replace(/\D/g, '');
+
+      // если автозаполнение вставило номер вместе с кодом страны - срезаем его
+      if (digits.length === 11 && (digits[0] === '7' || digits[0] === '8')) {
+        digits = digits.slice(1);
+        digitsBeforeCursor = Math.max(0, digitsBeforeCursor - 1);
+      }
+      digits = digits.slice(0, 10);
+
+      var out = '';
+      if (digits.length > 0) out += '(' + digits.slice(0, 3);
+      if (digits.length >= 3) out += ')';
+      if (digits.length > 3) out += ' ' + digits.slice(3, 6);
+      if (digits.length > 6) out += '-' + digits.slice(6, 8);
+      if (digits.length > 8) out += '-' + digits.slice(8, 10);
+      el.value = out;
+
+      if (digitsBeforeCursor === 0) {
+        el.setSelectionRange(0, 0);
+      } else {
+        var count = 0, pos = out.length;
+        for (var i = 0; i < out.length; i++) {
+          if (/\d/.test(out[i])) count++;
+          if (count === digitsBeforeCursor) { pos = i + 1; break; }
+        }
+        el.setSelectionRange(pos, pos);
+      }
+    };
+    phoneInput.addEventListener('input', formatPhoneField);
+    phoneInput.addEventListener('change', formatPhoneField);
+    phoneInput.addEventListener('blur', formatPhoneField);
+    // Chrome помечает автозаполненные поля спец-анимацией - ловим её как
+    // дополнительный сигнал "значение поменялось не через обычный ввод"
+    phoneInput.addEventListener('animationstart', function (e) {
+      if (e.animationName === 'onAutoFillMC') setTimeout(formatPhoneField, 0);
+    });
+  }
+
+  // ---------- lightbox: фото-карусель + видео ----------
+  // ВАЖНО: сама разметка #lightbox находится в документе НИЖЕ этого скрипта,
+  // поэтому все элементы ищем лениво (в момент клика/навигации), а не один раз
+  // при запуске скрипта - иначе getElementById вернёт null.
+  (function () {
+    var slides = [];
+    var index = 0;
+
+    function els() {
+      return {
+        overlay: document.getElementById('lightbox'),
+        imgEl: document.getElementById('lightboxImg'),
+        videoEl: document.getElementById('lightboxVideo'),
+        counterEl: document.getElementById('lightboxCounter'),
+        prevBtn: document.getElementById('lightboxPrev'),
+        nextBtn: document.getElementById('lightboxNext'),
+        closeBtn: document.getElementById('lightboxClose')
+      };
+    }
+
+    function showSlide(i) {
+      var e = els();
+      if (!slides.length || !e.overlay) return;
+      index = (i + slides.length) % slides.length;
+      var slide = slides[index];
+      e.videoEl.pause();
+      if (slide.type === 'video') {
+        e.imgEl.classList.remove('active');
+        e.videoEl.src = slide.src;
+        e.videoEl.classList.add('active');
+        e.videoEl.play().catch(function () {});
+      } else {
+        e.videoEl.classList.remove('active');
+        e.videoEl.removeAttribute('src');
+        e.imgEl.src = slide.src;
+        e.imgEl.alt = slide.alt || '';
+        e.imgEl.classList.add('active');
+      }
+      var multi = slides.length > 1;
+      e.prevBtn.style.display = multi ? 'flex' : 'none';
+      e.nextBtn.style.display = multi ? 'flex' : 'none';
+      e.counterEl.style.display = multi ? 'block' : 'none';
+      e.counterEl.textContent = multi ? (index + 1) + ' / ' + slides.length : '';
+    }
+
+    function openLightbox(groupEls, startIndex, type) {
+      var e = els();
+      if (!e.overlay) return;
+      slides = groupEls.map(function (el) {
+        return {
+          src: type === 'video' ? el.getAttribute('data-lightbox-src') : (el.getAttribute('data-lightbox-src') || el.src),
+          alt: el.getAttribute('alt') || '',
+          type: type
+        };
+      });
+      e.overlay.classList.add('open');
+      document.body.classList.add('menu-open');
+      showSlide(startIndex);
+    }
+
+    function closeLightbox() {
+      var e = els();
+      if (!e.overlay) return;
+      e.overlay.classList.remove('open');
+      document.body.classList.remove('menu-open');
+      e.videoEl.pause();
+      e.videoEl.removeAttribute('src');
+    }
+
+    document.addEventListener('click', function (ev) {
+      var trigger = ev.target.closest('[data-lightbox-src]');
+      if (trigger) {
+        ev.preventDefault();
+        var type = trigger.getAttribute('data-lightbox-type') || 'image';
+        var group = trigger.getAttribute('data-lightbox-group');
+        var groupEls = group
+          ? [].slice.call(document.querySelectorAll('[data-lightbox-group="' + group + '"]'))
+          : [trigger];
+        var startIndex = groupEls.indexOf(trigger);
+        openLightbox(groupEls, startIndex < 0 ? 0 : startIndex, type);
+        return;
+      }
+      var closeHit = ev.target.closest('#lightboxClose');
+      if (closeHit) { closeLightbox(); return; }
+      var prevHit = ev.target.closest('#lightboxPrev');
+      if (prevHit) { showSlide(index - 1); return; }
+      var nextHit = ev.target.closest('#lightboxNext');
+      if (nextHit) { showSlide(index + 1); return; }
+      if (ev.target.id === 'lightbox') closeLightbox();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var overlay = document.getElementById('lightbox');
+      if (!overlay || !overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showSlide(index - 1);
+      if (e.key === 'ArrowRight') showSlide(index + 1);
+    });
+  })();
+
+  // модалки политики и согласия - делегирование на document,
+  // чтобы не зависеть от того, что элементы модалок идут в разметке ниже скрипта
+  document.addEventListener('click', function (e) {
+    var opener = e.target.closest('[data-modal]');
+    if (opener) {
+      e.preventDefault();
+      var modal = document.getElementById(opener.getAttribute('data-modal'));
+      if (modal) modal.classList.add('open');
+      return;
+    }
+    var closer = e.target.closest('[data-close]');
+    if (closer) {
+      var m = closer.closest('.modal-overlay');
+      if (m) m.classList.remove('open');
+      return;
+    }
+    if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+      e.target.classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(function (m) { m.classList.remove('open'); });
+    }
+  });
+
+  document.getElementById('leadForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    // ЗАМЕНИТЬ: здесь подключить отправку в CRM / Telegram-бота вместо имитации успеха
+    this.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+  });
+
+  // мобильное меню - надёжный обработчик (без inline onclick, который иногда
+  // блокируется в мобильных браузерах/вебвью с более строгими настройками)
+  // переключатель светлой/тёмной темы
+  var themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('mc-theme', next); } catch (e) {}
+    });
+  }
+
+  var menuToggle = document.getElementById('menuToggle');
+  var mobileNav = document.querySelector('.mobile-nav');
+  if (menuToggle && mobileNav) {
+    menuToggle.addEventListener('click', function () {
+      var isOpen = mobileNav.classList.toggle('open');
+      menuToggle.classList.toggle('open', isOpen);
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      document.body.classList.toggle('menu-open', isOpen);
+    });
+  }
+
+  // высота шапки - чтобы полноэкранное меню начиналось точно под ней
+  var headerEl = document.querySelector('header');
+  var syncHeaderHeight = function () {
+    if (headerEl) document.documentElement.style.setProperty('--header-h', headerEl.offsetHeight + 'px');
+  };
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+
+  document.querySelectorAll('.mobile-nav a').forEach(function(link){
+    link.addEventListener('click', function(){
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    });
+  });
+
+  // scroll-triggered reveal animations (с защитой: если что-то пойдёт не так,
+  // контент всё равно останется видимым - см. правило html.js-anim в CSS)
+  try {
+    if ('IntersectionObserver' in window) {
+      var revealEls = [].slice.call(document.querySelectorAll('.reveal'));
+      document.documentElement.classList.add('js-anim');
+
+      // двунаправленно: элемент появляется при входе во вьюпорт и мягко
+      // прячется, если его проскроллили обратно вверх за пределы экрана
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var el = entries[i].target;
+          if (entries[i].isIntersecting) {
+            el.classList.add('in-view');
+          } else if (entries[i].boundingClientRect.top > 0) {
+            // элемент ушёл вниз за пределы экрана (проскроллили вверх) - прячем,
+            // чтобы при повторном скролле вниз анимация появления повторилась
+            el.classList.remove('in-view');
+          }
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+      for (var j = 0; j < revealEls.length; j++) {
+        io.observe(revealEls[j]);
+      }
+
+      // страховка: если через 4 секунды что-то не открылось (например, элемент
+      // вне зоны наблюдения из-за нестандартной вёрстки) - просто показать всё
+      setTimeout(function () {
+        for (var k = 0; k < revealEls.length; k++) {
+          revealEls[k].classList.add('in-view');
+        }
+      }, 4000);
+    }
+  } catch (e) {
+    document.documentElement.classList.remove('js-anim');
+  }
+</script>
+
+<!-- ================= MODALS ================= -->
+<div class="modal-overlay" id="modalPolicy">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Политика обработки персональных данных</h3>
+      <button class="modal-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-note">Термины и структура документа приведены в соответствии с ФЗ №152 «О персональных данных» и адаптированы под сайт школы Music Club в Калуге.</p>
+
+      <h4>Термины и определения</h4>
+      <p><b>Обработка персональных данных</b> - любые действия с персональными данными: сбор, запись, хранение, уточнение, использование, передача, обезличивание, блокирование, удаление и уничтожение, с использованием средств автоматизации или без них.</p>
+      <p><b>Оператор</b> - лицо, организующее обработку персональных данных и определяющее её цели. В данном случае - ИП Степанов Кирилл Алексеевич.</p>
+      <p><b>Субъект персональных данных</b> - физическое лицо, к которому относятся обрабатываемые данные (посетитель сайта, оставивший заявку).</p>
+      <p><b>Сайт</b> - интернет-страница школы Music Club, на которой размещена форма заявки на пробное занятие.</p>
+
+      <h4>1. Общие положения</h4>
+      <p>Настоящая политика составлена в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению их безопасности со стороны ИП Степанова Кирилла Алексеевича (далее - «Оператор»), которому принадлежит школа музыки Music Club в Калуге. Соблюдение прав и свобод человека при обработке его персональных данных, включая право на неприкосновенность частной жизни, - важнейшее условие работы Оператора.</p>
+
+      <h4>2. Область действия</h4>
+      <p>Политика распространяется на все процессы Оператора, связанные с обработкой персональных данных - как с использованием средств автоматизации (включая сайт), так и без них. Она обязательна для исполнения всеми, кто от имени Оператора допущен к обработке таких данных.</p>
+
+      <h4>3. Права и обязанности Оператора</h4>
+      <p>Оператор вправе запрашивать у субъекта достоверные данные и самостоятельно определять меры, необходимые для соблюдения требований закона. При этом Оператор обязан: информировать субъекта об обработке его данных по запросу; организовывать обработку в порядке, установленном законом; отвечать на обращения субъектов; принимать правовые, организационные и технические меры для защиты данных от неправомерного доступа, утраты, изменения или распространения; прекращать обработку и уничтожать данные в случаях, предусмотренных законом.</p>
+
+      <h4>4. Права и обязанности субъекта персональных данных</h4>
+      <p>Субъект вправе: получать информацию об обработке своих данных; требовать их уточнения, блокирования или уничтожения, если данные неполны, устарели или получены незаконно; отозвать согласие на обработку в любой момент; обжаловать действия Оператора в уполномоченном органе или в суде. Субъект обязан предоставлять достоверные данные о себе и сообщать об их изменении.</p>
+
+      <h4>5. Какие данные обрабатываются</h4>
+      <p>В рамках формы заявки на сайте школы собираются: имя; номер телефона; выбранное направление обучения (если указано). Дополнительно сайт может собирать обезличенные технические данные о посещении (cookie, статистика посещений) через сервисы веб-аналитики. Специальные категории данных (о расе, политических взглядах, состоянии здоровья и т.п.) Оператором не собираются и не обрабатываются.</p>
+
+      <h4>6. Принципы обработки персональных данных</h4>
+      <p>Обработка данных ведётся на законной и справедливой основе, ограничивается конкретными и заранее определёнными целями, не допускает объединения баз данных с несовместимыми целями обработки и не превышает объёма, необходимого для этих целей. Данные хранятся не дольше, чем это требуется для целей обработки, а затем уничтожаются или обезличиваются.</p>
+
+      <h4>7. Цели обработки</h4>
+      <p>Данные обрабатываются для того, чтобы: связаться с вами по вопросу записи на пробное занятие; проконсультировать по направлениям и расписанию школы; исполнить договорные обязательства, если между вами и школой заключён договор об оказании услуг; с вашего отдельного согласия - сообщить об акциях и новых программах. Обезличенные технические данные используются для улучшения работы сайта.</p>
+
+      <h4>8. Правовые основания обработки</h4>
+      <p>Основаниями обработки являются: учредительные документы Оператора; федеральные законы и нормативные акты в области персональных данных; согласие субъекта, полученное при заполнении формы на сайте. Заполняя форму, субъект выражает согласие с настоящей политикой.</p>
+
+      <h4>9. Условия обработки персональных данных</h4>
+      <p>Обработка осуществляется с согласия субъекта и в объёме, необходимом для исполнения договора или заявки, стороной которой он является, а также для реализации законных интересов Оператора при условии соблюдения прав и свобод субъекта.</p>
+
+      <h4>10. Сбор, хранение, передача и защита данных</h4>
+      <p>Оператор принимает организационные и технические меры для защиты данных от неправомерного доступа и обеспечивает их конфиденциальность. Передача данных третьим лицам возможна только в рамках, прямо предусмотренных законодательством РФ, либо при привлечении сервисов, необходимых для работы школы (например, сервисов связи или CRM), которые действуют на основании договора и обязаны соблюдать конфиденциальность. При реорганизации или передаче бизнеса Оператора все обязательства по настоящей политике переходят к правопреемнику. Срок обработки данных определяется достижением целей, для которых они были собраны; отозвать согласие можно в любой момент, направив уведомление на контакты Оператора.</p>
+
+      <h4>11. Перечень действий с персональными данными</h4>
+      <p>Оператор осуществляет сбор, запись, систематизацию, накопление, хранение, уточнение, использование, передачу, обезличивание, блокирование, удаление и уничтожение персональных данных, в том числе с использованием средств автоматизации.</p>
+
+      <h4>12. Трансграничная передача данных</h4>
+      <p>Оператор не осуществляет трансграничную передачу персональных данных на территорию иностранных государств. Если такая необходимость возникнет, она будет производиться только в страны, обеспечивающие надёжную защиту прав субъектов, либо с отдельного письменного согласия субъекта.</p>
+
+      <h4>13. Конфиденциальность персональных данных</h4>
+      <p>Оператор и любые лица, получившие доступ к персональным данным, обязаны не раскрывать их третьим лицам и не распространять без согласия субъекта, если иное не предусмотрено федеральным законом.</p>
+
+      <h4>Контакты оператора</h4>
+      <p>ИП Степанов Кирилл Алексеевич. Школа Music Club: г. Калуга, ул. Ленина, д. 79. Телефон: +7 (920) 098-80-03. Почта: musicclub40@yandex.ru.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalConsent">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Согласие на обработку персональных данных</h3>
+      <button class="modal-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>Отмечая галочку на сайте и отправляя форму заявки, вы (субъект персональных данных) даёте согласие ИП Степанову Кириллу Алексеевичу (далее - «Оператор»), которому принадлежит школа музыки Music Club (г. Калуга, ул. Ленина, д. 79), на обработку следующих персональных данных:</p>
+      <ul>
+        <li>имя;</li>
+        <li>номер телефона;</li>
+        <li>выбранное направление обучения (если указано);</li>
+        <li>обезличенные данные о посещении сайта, которые собираются автоматически сервисами веб-аналитики (cookie, статистика переходов).</li>
+      </ul>
+
+      <p>Согласие даётся на совершение Оператором любых необходимых действий с указанными данными как с использованием средств автоматизации, так и без них: сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), использование, передачу (в том числе третьим лицам в объёме, необходимом для связи с вами и организации пробного занятия), обезличивание, блокирование, удаление и уничтожение.</p>
+
+      <h4>Цель обработки</h4>
+      <p>Оператор обрабатывает данные с целью: связаться с вами для записи на пробное занятие; проконсультировать по программам, направлениям и расписанию школы; исполнить обязательства по договору оказания услуг, если он будет заключён; информировать вас об услугах, акциях и новых программах Music Club - при условии, что вы не отказались от такой рассылки.</p>
+
+      <p>Если ваши персональные данные изменятся, вы можете сообщить новые данные Оператору любым удобным способом - по телефону или почте, указанным ниже.</p>
+
+      <h4>Срок действия и порядок отзыва</h4>
+      <p>Согласие действует с момента отправки формы на сайте и до его отзыва. Вы вправе отозвать согласие в любой момент, направив Оператору письменное уведомление на почту musicclub40@yandex.ru. После получения такого уведомления Оператор прекращает обработку персональных данных и уничтожает их в срок, не превышающий 30 дней с даты отзыва, если более длительное хранение не требуется законодательством.</p>
+
+      <h4>Контакты оператора</h4>
+      <p>ИП Степанов Кирилл Алексеевич. Школа Music Club: г. Калуга, ул. Ленина, д. 79. Телефон: +7 (920) 098-80-03. Почта: musicclub40@yandex.ru.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LIGHTBOX (фото и видео) ================= -->
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-stage">
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Предыдущее"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <img class="lightbox-img" id="lightboxImg" alt="">
+    <video class="lightbox-video" id="lightboxVideo" controls playsinline></video>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Следующее"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+  </div>
+</div>
+
+</body>
+</html>
