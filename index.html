@@ -537,19 +537,7 @@ body{
   color:#111 !important;
 }
   .phone-field input{padding-left:38px;font-weight:700;}
-@keyframes onAutoFillMC{
-  from{opacity:1;}
-  to{opacity:1;}
-}
 
-.phone-field input:-webkit-autofill{
-  animation-name:onAutoFillMC;
-  animation-duration:0.001s;
-}
-
-.phone-field.autofilled .phone-prefix{
-  color:var(--ink) !important;
-}}
   .checkbox-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;}
   .checkbox-row input{width:16px;height:16px;margin-top:3px;flex-shrink:0;accent-color:var(--violet);}
   .checkbox-row label{font-size:13px;color:var(--ink-soft);line-height:1.4;}
@@ -730,21 +718,6 @@ body{
     clip-path: inset(0);
     -webkit-clip-path: inset(0);
   }
-}
-  /* Исправление цвета автоподстановки телефона */
-:root[data-theme="dark"] input:-webkit-autofill,
-:root[data-theme="dark"] input:-webkit-autofill:hover,
-:root[data-theme="dark"] input:-webkit-autofill:focus,
-:root[data-theme="dark"] input:-webkit-autofill:active {
-  -webkit-text-fill-color: var(--ink) !important;
-  color: var(--ink) !important;
-}
-  :root[data-theme="light"] input:-webkit-autofill,
-:root[data-theme="light"] input:-webkit-autofill:hover,
-:root[data-theme="light"] input:-webkit-autofill:focus,
-:root[data-theme="light"] input:-webkit-autofill:active {
-  -webkit-text-fill-color: var(--ink) !important;
-  color: var(--ink) !important;
 }
 </style>
 </head>
