@@ -1406,11 +1406,22 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   }
 });
 
+  // мобильное меню
+var menuToggle = document.getElementById('menuToggle');
+var mobileNav = document.querySelector('.mobile-nav');
 
-  // мобильное меню - надёжный обработчик (без inline onclick, который иногда
-  // блокируется в мобильных браузерах/вебвью с более строгими настройками)
-  // переключатель светлой/тёмной темы
- document.addEventListener('click', function (e) {
+if (menuToggle && mobileNav) {
+  menuToggle.addEventListener('click', function () {
+    var isOpen = mobileNav.classList.toggle('open');
+
+    menuToggle.classList.toggle('open', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    document.body.classList.toggle('menu-open', isOpen);
+  });
+}
+
+// переключатель светлой/тёмной темы
+document.addEventListener('click', function (e) {
   var themeToggle = e.target.closest('#themeToggle');
 
   if (!themeToggle) return;
