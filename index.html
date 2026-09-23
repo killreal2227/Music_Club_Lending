@@ -2,36 +2,22 @@
 <html lang="ru">
 <head>
 <script>
-  // применяем тему ДО отрисовки страницы, чтобы не было мигания:
-  // сначала смотрим сохранённый выбор пользователя, иначе - системную тему
+  // применяем тему ДО отрисовки страницы, чтобы не было мигания
   (function () {
     try {
       var saved = localStorage.getItem('mc-theme');
-      var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var theme = saved || (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+      );
+
       document.documentElement.setAttribute('data-theme', theme);
     } catch (e) {}
   })();
-  (function () {
-  var bar = document.getElementById('stickyCta');
-  var fab = document.getElementById('callFab');           // ← добавить эту строку
-  var hero = document.querySelector('.hero');
-  var formSection = document.getElementById('form');
-  if (!bar || !hero || !formSection) return;
-
-  var ticking = false;
-  function update() {
-    ticking = false;
-    var heroBottom = hero.getBoundingClientRect().bottom;
-    var formRect = formSection.getBoundingClientRect();
-    var formVisible = formRect.top < window.innerHeight && formRect.bottom > 0;
-    var pastHero = heroBottom < 0;
-    var show = pastHero && !formVisible;
-    bar.classList.toggle('show', show);
-    if (fab) fab.classList.toggle('raised', show);          // ← добавить эту строку
-  }
-
-})();
 </script>
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Music Club - школа музыки в Калуге. Бесплатный пробный урок</title>
