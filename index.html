@@ -723,6 +723,13 @@ body{
 @media (prefers-reduced-motion: reduce){.call-fab-ring{animation:none;}}
   /* курсор-подсказка на кликабельных фото */
   [data-lightbox-src]{cursor:zoom-in;}
+  @supports (-webkit-touch-callout: none) {
+  html {
+    overflow-x: hidden;
+    clip-path: inset(0);
+    -webkit-clip-path: inset(0);
+  }
+}
 </style>
 </head>
 <body>
