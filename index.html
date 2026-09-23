@@ -1414,18 +1414,6 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   }
 });
 
-    form.style.display = 'none';
-    document.getElementById('formSuccess').classList.add('show');
-
-  } catch (error) {
-    console.error(error);
-
-    alert('ОШИБКА СОЕДИНЕНИЯ\n\n' + error);
-
-    button.disabled = false;
-    button.textContent = 'Записаться на пробный урок';
-  }
-});
 
   // мобильное меню - надёжный обработчик (без inline onclick, который иногда
   // блокируется в мобильных браузерах/вебвью с более строгими настройками)
