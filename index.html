@@ -607,9 +607,18 @@ body{
   .footer-inner{
     display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
   }
-  .footer-logo{display:flex;align-items:center;gap:8px;}
-  .footer-logo img{height:20px;width:auto;}
+.footer-logo{display:flex;align-items:center;gap:8px;}
+.footer-logo img{height:20px;width:auto;}
+.footer-logo-dark{display:none;}
 
+:root[data-theme="dark"] .footer-logo-light{
+  display:none;
+}
+
+:root[data-theme="dark"] .footer-logo-dark{
+  display:block;
+  height:18px;
+}
 :root[data-theme="dark"] .footer-logo img{
   content:url("images/music-club.png");
   height:18px;
@@ -1179,10 +1188,11 @@ body{
 
 <footer>
   <div class="wrap footer-inner">
-    <div class="footer-logo">
-      <img src="images/music-club-2.png" alt="Music Club">
-      <span>MUSIC CLUB, КАЛУГА</span>
-    </div>
+<div class="footer-logo">
+  <img class="footer-logo-light" src="images/music-club-2.png" alt="Music Club">
+  <img class="footer-logo-dark" src="images/music-club.png" alt="Music Club">
+  <span>MUSIC CLUB, КАЛУГА</span>
+</div>
     <a href="#" data-modal="modalPolicy">Политика обработки персональных данных</a>
   </div>
 </footer>
