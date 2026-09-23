@@ -536,6 +536,13 @@ body{
   .phone-field:has(input:-webkit-autofill) .phone-prefix{
   color:#111 !important;
 }
+
+.phone-field input:-webkit-autofill,
+.phone-field input:-webkit-autofill:hover,
+.phone-field input:-webkit-autofill:focus,
+.phone-field input:-webkit-autofill:active{
+  -webkit-text-fill-color:#111 !important;
+}
   .phone-field input{padding-left:38px;font-weight:700;}
 
   .checkbox-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;}
