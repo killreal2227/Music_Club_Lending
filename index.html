@@ -1430,27 +1430,24 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   // мобильное меню - надёжный обработчик (без inline onclick, который иногда
   // блокируется в мобильных браузерах/вебвью с более строгими настройками)
   // переключатель светлой/тёмной темы
-  var themeToggle = document.getElementById('themeToggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function () {
-      var current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      var next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('mc-theme', next); } catch (e) {}
-    });
-  }
+ document.addEventListener('click', function (e) {
+  var themeToggle = e.target.closest('#themeToggle');
 
-  var menuToggle = document.getElementById('menuToggle');
-  var mobileNav = document.querySelector('.mobile-nav');
-  if (menuToggle && mobileNav) {
-    menuToggle.addEventListener('click', function () {
-      var isOpen = mobileNav.classList.toggle('open');
-      menuToggle.classList.toggle('open', isOpen);
-      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      document.body.classList.toggle('menu-open', isOpen);
-    });
-  }
+  if (!themeToggle) return;
 
+  var current =
+    document.documentElement.getAttribute('data-theme') === 'dark'
+      ? 'dark'
+      : 'light';
+
+  var next = current === 'dark' ? 'light' : 'dark';
+
+  document.documentElement.setAttribute('data-theme', next);
+
+  try {
+    localStorage.setItem('mc-theme', next);
+  } catch (e) {}
+});
   // высота шапки - чтобы полноэкранное меню начиналось точно под ней
   var headerEl = document.querySelector('header');
   var syncHeaderHeight = function () {
