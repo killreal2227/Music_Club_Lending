@@ -311,10 +311,14 @@ body{
   }
 
   /* ---------- USP marquee ---------- */
-  .usp-strip{
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-    background:var(--cream-deep);padding:28px 0;
-  }
+.usp-strip{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:var(--cream-deep);
+  padding:28px 0;
+  display:flex;
+  align-items:center;
+}
 .usp-strip .wrap{
   overflow:hidden;
   display:flex;
@@ -337,7 +341,7 @@ body{
 }
 
 .usp-item:first-child{
-  margin-right:36px;
+  margin-right:52px;
 }
   .usp-icon{
     width:36px;height:36px;border-radius:50%;background:var(--plum-dark);
