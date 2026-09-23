@@ -1402,11 +1402,18 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
       throw new Error('Ошибка отправки');
     }
 
-   
+    form.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+
+  } catch (error) {
+    console.error('Ошибка отправки заявки:', error);
+
+    button.disabled = false;
+    button.textContent = 'Записаться на пробный урок';
+
     alert('Не удалось отправить заявку. Попробуйте ещё раз, или наберите нам.');
   }
 });
-
   // мобильное меню
 var menuToggle = document.getElementById('menuToggle');
 var mobileNav = document.querySelector('.mobile-nav');
