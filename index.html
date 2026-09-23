@@ -1411,20 +1411,22 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
 
     const result = await response.json();
 
-    console.log('WORKER RESPONSE:', result);
-
     if (!response.ok || !result.success) {
-      alert(
-        'ОШИБКА CRM\n\n' +
-        'HTTP: ' + response.status + '\n' +
-        'Статус AlphaCRM: ' + (result.crm_status || 'нет') + '\n' +
-        'Ответ AlphaCRM: ' + (result.crm_response || result.error || 'нет ответа')
-      );
-
-      button.disabled = false;
-      button.textContent = 'Записаться на пробный урок';
-      return;
+      throw new Error('Ошибка отправки');
     }
+
+    form.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+
+  } catch (error) {
+    console.error('Ошибка отправки заявки:', error);
+
+    button.disabled = false;
+    button.textContent = 'Записаться на пробный урок';
+
+    alert('Не удалось отправить заявку. Попробуйте ещё раз, или наберите нам.');
+  }
+});
 
     form.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
