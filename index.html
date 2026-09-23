@@ -717,6 +717,21 @@ body{
     -webkit-clip-path: inset(0);
   }
 }
+  /* Исправление цвета автоподстановки телефона */
+:root[data-theme="dark"] input:-webkit-autofill,
+:root[data-theme="dark"] input:-webkit-autofill:hover,
+:root[data-theme="dark"] input:-webkit-autofill:focus,
+:root[data-theme="dark"] input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--ink) !important;
+  color: var(--ink) !important;
+}
+  :root[data-theme="light"] input:-webkit-autofill,
+:root[data-theme="light"] input:-webkit-autofill:hover,
+:root[data-theme="light"] input:-webkit-autofill:focus,
+:root[data-theme="light"] input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--ink) !important;
+  color: var(--ink) !important;
+}
 </style>
 </head>
 <body>
