@@ -533,6 +533,9 @@ body{
     position:absolute;left:14px;top:50%;transform:translateY(-50%);
     font-weight:700;color:var(--ink);pointer-events:none;font-size:15px;
   }
+  .phone-field:has(input:-webkit-autofill) .phone-prefix{
+  color:#111 !important;
+}
   .phone-field input{padding-left:38px;font-weight:700;}
 @keyframes onAutoFillMC{
   from{opacity:1;}
