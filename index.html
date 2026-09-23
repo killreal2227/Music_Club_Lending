@@ -339,7 +339,13 @@ body{
     display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
   .usp-icon svg{width:18px;height:18px;stroke:var(--on-dark);}
-  .usp-item p{font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.4;max-width:340px;white-space:normal;}
+  .usp-item p{
+  font-size:14.5px;
+  color:var(--ink);
+  font-weight:600;
+  line-height:1.4;
+  white-space:nowrap;
+}
   @keyframes usp-marquee{
     to{transform:translateX(calc(-1 * var(--marquee-distance, 50%)));}
   }
