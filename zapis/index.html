@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запись на пробный урок — Music Club</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --brand:#4a22a8; --brand-soft:#efeafb; --text:#1d1538; --muted:#6b6485; --err:#c62b4a; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Montserrat',system-ui,sans-serif; color:var(--text); background:#fff; }
+  .wrap { max-width:460px; margin:0 auto; padding:28px 20px 40px; }
+  .logo { color:var(--brand); font-weight:700; letter-spacing:.12em; font-size:14px; text-transform:uppercase; }
+  .logo small { display:block; font-size:10px; font-weight:600; letter-spacing:.14em; margin-top:2px; }
+  h1 { color:var(--brand); font-size:30px; line-height:1.15; margin:28px 0 10px; text-transform:uppercase; }
+  .lead { color:var(--muted); font-size:14px; margin:0 0 24px; text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
+  label.field { display:block; margin-bottom:16px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--brand); }
+  input[type=text], input[type=tel], select {
+    width:100%; margin-top:6px; padding:14px 16px; font:inherit; font-size:16px; font-weight:500; color:var(--text);
+    border:1.5px solid var(--brand); border-radius:14px; background:#fff; appearance:none;
+  }
+  input:focus, select:focus { outline:3px solid var(--brand-soft); }
+  .pills { display:flex; gap:10px; margin:6px 0 18px; }
+  .pills label { flex:1; }
+  .pills input { position:absolute; opacity:0; pointer-events:none; }
+  .pills span { display:block; text-align:center; padding:14px 10px; border:1.5px solid var(--brand); border-radius:999px;
+    font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--brand); cursor:pointer; }
+  .pills input:checked + span { background:var(--brand); color:#fff; }
+  .pills input:focus-visible + span { outline:3px solid var(--brand-soft); }
+  .consent { display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--muted); margin:6px 0 20px; line-height:1.45; }
+  .consent input { margin-top:2px; width:18px; height:18px; accent-color:var(--brand); flex:none; }
+  .consent a { color:var(--brand); }
+  button { width:100%; padding:16px; font:inherit; font-size:15px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#fff; background:var(--brand); border:0; border-radius:999px; cursor:pointer; }
+  button[disabled] { opacity:.6; cursor:default; }
+  .error { color:var(--err); font-size:13px; margin:12px 0 0; min-height:1em; }
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .done { display:none; text-align:center; padding:40px 0; }
+  .done h2 { color:var(--brand); text-transform:uppercase; }
+  .done p { color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Music Club<small>Школа музыки</small></div>
+
+  <div id="formBox">
+    <h1>Пора<br>попробовать?</h1>
+    <p class="lead">Запишись на бесплатный пробный урок</p>
+
+    <form id="leadForm" novalidate>
+      <label class="field">Имя
+        <input type="text" name="name" autocomplete="given-name" required>
+      </label>
+
+      <label class="field">Телефон
+        <input type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7" required>
+      </label>
+
+      <label class="field">Направление
+        <select name="direction">
+          <option value="">Пока не решил(а) — посоветуйте</option>
+          <option>Вокал</option>
+          <option>Гитара</option>
+          <option>Барабаны</option>
+          <option>Фортепиано</option>
+          <option>Актёрское мастерство</option>
+          <option>Ораторское искусство</option>
+        </select>
+      </label>
+
+      <!-- ловушка для ботов -->
+      <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+
+      <!-- метки источника -->
+      <input type="hidden" name="utm_source">
+      <input type="hidden" name="utm_medium">
+      <input type="hidden" name="utm_campaign">
+      <input type="hidden" name="utm_content">
+      <input type="hidden" name="utm_term">
+      <input type="hidden" name="yclid">
+      <input type="hidden" name="page" value="">
+
+      <label class="consent">
+        <input type="checkbox" name="consent" required>
+        <span>Согласен(на) с <a href="/privacy" target="_blank" rel="noopener">политикой обработки персональных данных</a> и даю <a href="/privacy#consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span>
+      </label>
+
+      <button type="submit" id="submitBtn">Записаться</button>
+      <p class="error" id="err" role="alert"></p>
+    </form>
+  </div>
+
+  <div class="done" id="doneBox">
+    <h2>Заявка принята</h2>
+    <p>Мы позвоним вам в ближайшее время и подберём удобное время для пробного урока.</p>
+  </div>
+</div>
+
+<!-- Яндекс Метрика: тот же счётчик, что и на основном сайте -->
+<script>
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=113165711", "ym");
+ym(113165711, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, referrer: document.referrer, url: location.href });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/113165711" style="position:absolute;left:-9999px;" alt=""></div></noscript>
+
+<script>
+(function () {
+  var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','yclid'];
+  var form = document.getElementById('leadForm');
+  var params = new URLSearchParams(location.search);
+
+  // 1. Запоминаем метки (первый источник сохраняется на всё время визита)
+  try {
+    keys.forEach(function (k) {
+      if (params.get(k)) sessionStorage.setItem('lead_' + k, params.get(k));
+    });
+  } catch (e) {}
+
+  // 2. Подставляем метки в скрытые поля
+  keys.forEach(function (k) {
+    var v = params.get(k);
+    try { v = v || sessionStorage.getItem('lead_' + k); } catch (e) {}
+    if (form.elements[k]) form.elements[k].value = v || '';
+  });
+  form.elements.page.value = location.pathname;
+
+  // 3. Телефон: оставляем только допустимые символы
+  form.elements.phone.addEventListener('input', function (e) {
+    e.target.value = e.target.value.replace(/[^\d+()\-\s]/g, '');
+  });
+
+  var err = document.getElementById('err');
+  var btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.textContent = '';
+
+    var f = form.elements;
+    var digits = f.phone.value.replace(/\D/g, '');
+    // 8920… и 7920… приводим к 10 цифрам без кода страны
+    if (digits.length === 11 && (digits[0] === '7' || digits[0] === '8')) digits = digits.slice(1);
+    if (!f.name.value.trim()) return err.textContent = 'Укажите имя';
+    if (digits.length !== 10) return err.textContent = 'Проверьте номер телефона';
+    if (!f.consent.checked) return err.textContent = 'Нужно согласие на обработку данных';
+
+    btn.disabled = true;
+    btn.textContent = 'Отправляем…';
+
+    var data = {};
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    data.phone = '+7' + digits;
+
+    fetch('https://music-club-leads.killreal2227.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.success) throw new Error(r.status); return j; }); })
+    .then(function () {
+      try { if (window.ym) ym(113165711, 'reachGoal', 'lead_form_success'); } catch (e) {}
+      document.getElementById('formBox').style.display = 'none';
+      document.getElementById('doneBox').style.display = 'block';
+    })
+    .catch(function () {
+      err.textContent = 'Не удалось отправить. Попробуйте ещё раз или позвоните нам.';
+      btn.disabled = false;
+      btn.textContent = 'Записаться';
+    });
+  });
+})();
+</script>
+</body>
+</html>

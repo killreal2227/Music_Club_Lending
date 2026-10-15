@@ -1452,6 +1452,26 @@ ym(113165711, 'init', {
     }
   });
 
+// Запоминаем источник перехода (UTM-метки и yclid) на время визита,
+// чтобы передать его вместе с заявкой
+var LEAD_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','yclid'];
+(function () {
+  try {
+    var p = new URLSearchParams(location.search);
+    LEAD_KEYS.forEach(function (k) { if (p.get(k)) sessionStorage.setItem('lead_' + k, p.get(k)); });
+  } catch (e) {}
+})();
+function getLeadSource() {
+  var out = {};
+  var p = new URLSearchParams(location.search);
+  LEAD_KEYS.forEach(function (k) {
+    var v = p.get(k);
+    try { v = v || sessionStorage.getItem('lead_' + k); } catch (e) {}
+    out[k] = v || '';
+  });
+  return out;
+}
+
 document.getElementById('leadForm').addEventListener('submit', async function(e){
   e.preventDefault();
 
@@ -1480,11 +1500,11 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        body: JSON.stringify(Object.assign({
           name: name,
           phone: phone,
           direction: direction
-        })
+        }, getLeadSource()))
       }
     );
 
