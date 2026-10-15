@@ -1,103 +1,24 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<script>
+  // тема — как на основном сайте: сохранённый выбор или системная
+  (function () {
+    try {
+      var saved = localStorage.getItem('mc-theme');
+      var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Запись на пробный урок — Music Club</title>
+<title>Запись на бесплатный пробный урок — Music Club</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="/images/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root { --brand:#4a22a8; --brand-soft:#efeafb; --text:#1d1538; --muted:#6b6485; --err:#c62b4a; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:'Montserrat',system-ui,sans-serif; color:var(--text); background:#fff; }
-  .wrap { max-width:460px; margin:0 auto; padding:28px 20px 40px; }
-  .logo { color:var(--brand); font-weight:700; letter-spacing:.12em; font-size:14px; text-transform:uppercase; }
-  .logo small { display:block; font-size:10px; font-weight:600; letter-spacing:.14em; margin-top:2px; }
-  h1 { color:var(--brand); font-size:30px; line-height:1.15; margin:28px 0 10px; text-transform:uppercase; }
-  .lead { color:var(--muted); font-size:14px; margin:0 0 24px; text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
-  label.field { display:block; margin-bottom:16px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--brand); }
-  input[type=text], input[type=tel], select {
-    width:100%; margin-top:6px; padding:14px 16px; font:inherit; font-size:16px; font-weight:500; color:var(--text);
-    border:1.5px solid var(--brand); border-radius:14px; background:#fff; appearance:none;
-  }
-  input:focus, select:focus { outline:3px solid var(--brand-soft); }
-  .pills { display:flex; gap:10px; margin:6px 0 18px; }
-  .pills label { flex:1; }
-  .pills input { position:absolute; opacity:0; pointer-events:none; }
-  .pills span { display:block; text-align:center; padding:14px 10px; border:1.5px solid var(--brand); border-radius:999px;
-    font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--brand); cursor:pointer; }
-  .pills input:checked + span { background:var(--brand); color:#fff; }
-  .pills input:focus-visible + span { outline:3px solid var(--brand-soft); }
-  .consent { display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--muted); margin:6px 0 20px; line-height:1.45; }
-  .consent input { margin-top:2px; width:18px; height:18px; accent-color:var(--brand); flex:none; }
-  .consent a { color:var(--brand); }
-  button { width:100%; padding:16px; font:inherit; font-size:15px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-    color:#fff; background:var(--brand); border:0; border-radius:999px; cursor:pointer; }
-  button[disabled] { opacity:.6; cursor:default; }
-  .error { color:var(--err); font-size:13px; margin:12px 0 0; min-height:1em; }
-  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
-  .done { display:none; text-align:center; padding:40px 0; }
-  .done h2 { color:var(--brand); text-transform:uppercase; }
-  .done p { color:var(--muted); }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="logo">Music Club<small>Школа музыки</small></div>
-
-  <div id="formBox">
-    <h1>Пора<br>попробовать?</h1>
-    <p class="lead">Запишись на бесплатный пробный урок</p>
-
-    <form id="leadForm" novalidate>
-      <label class="field">Имя
-        <input type="text" name="name" autocomplete="given-name" required>
-      </label>
-
-      <label class="field">Телефон
-        <input type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7" required>
-      </label>
-
-      <label class="field">Направление
-        <select name="direction">
-          <option value="">Пока не решил(а) — посоветуйте</option>
-          <option>Вокал</option>
-          <option>Гитара</option>
-          <option>Барабаны</option>
-          <option>Фортепиано</option>
-          <option>Актёрское мастерство</option>
-          <option>Ораторское искусство</option>
-        </select>
-      </label>
-
-      <!-- ловушка для ботов -->
-      <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-
-      <!-- метки источника -->
-      <input type="hidden" name="utm_source">
-      <input type="hidden" name="utm_medium">
-      <input type="hidden" name="utm_campaign">
-      <input type="hidden" name="utm_content">
-      <input type="hidden" name="utm_term">
-      <input type="hidden" name="yclid">
-      <input type="hidden" name="page" value="">
-
-      <label class="consent">
-        <input type="checkbox" name="consent" required>
-        <span>Согласен(на) с <a href="/privacy" target="_blank" rel="noopener">политикой обработки персональных данных</a> и даю <a href="/privacy#consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a></span>
-      </label>
-
-      <button type="submit" id="submitBtn">Записаться</button>
-      <p class="error" id="err" role="alert"></p>
-    </form>
-  </div>
-
-  <div class="done" id="doneBox">
-    <h2>Заявка принята</h2>
-    <p>Мы позвоним вам в ближайшее время и подберём удобное время для пробного урока.</p>
-  </div>
-</div>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- Яндекс Метрика: тот же счётчик, что и на основном сайте -->
 <script>
@@ -108,55 +29,258 @@ k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNo
 (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=113165711", "ym");
 ym(113165711, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, referrer: document.referrer, url: location.href });
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/113165711" style="position:absolute;left:-9999px;" alt=""></div></noscript>
+
+<style>
+  :root{
+    --cream:#F1EEF7;
+    --cream-deep:#E0D9EC;
+    --ink:#292136;
+    --ink-soft:rgba(41,33,54,0.68);
+    --violet:#7A5DAC;
+    --violet-dark:#5C418B;
+    --violet-soft:#CFC6E7;
+    --header-bg:#3C2F5B;
+    --line:rgba(41,33,54,0.13);
+    --surface:#F9F8FB;
+    --on-dark:#F9F8FB;
+    --err:#C0344F;
+    --radius-btn:14px;
+  }
+  :root[data-theme="dark"]{
+    --cream:#1F1A28;
+    --cream-deep:#292334;
+    --ink:#ECE8F3;
+    --ink-soft:rgba(236,232,243,0.68);
+    --violet:#A58ECC;
+    --violet-dark:#C1AFDE;
+    --violet-soft:#322A41;
+    --header-bg:#15111D;
+    --line:rgba(236,232,243,0.13);
+    --surface:#2E273A;
+    --on-dark:#ECE8F3;
+    --err:#FF8DA1;
+  }
+  *{box-sizing:border-box;}
+  html{background:var(--header-bg);}
+  body{
+    margin:0; min-height:100vh; display:flex; flex-direction:column;
+    background:var(--cream-deep); color:var(--ink);
+    font-family:'Manrope',sans-serif; font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1{
+    font-family:'Unbounded',sans-serif; font-weight:600; line-height:1.16; letter-spacing:-0.01em;
+    font-size:clamp(24px,6.4vw,32px); margin:0 0 16px;
+  }
+  h3{font-family:'Manrope',sans-serif; font-weight:800; line-height:1.2; margin:0;}
+  p{margin:0;}
+  a{color:inherit;}
+
+  /* шапка — как на сайте */
+  header{background:var(--header-bg);}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;max-width:1240px;margin:0 auto;}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo img{height:30px;width:auto;display:block;}
+  .logo span{font-family:'Unbounded',sans-serif;font-weight:700;font-size:17px;color:var(--on-dark);letter-spacing:0.02em;line-height:1;}
+  .back{font-size:14px;font-weight:600;color:rgba(246,241,230,0.78);text-decoration:none;white-space:nowrap;}
+  .back:hover{color:var(--on-dark);}
+  @media (max-width:640px){ .logo span{font-size:14px;letter-spacing:0.01em;} .logo img{height:24px;} }
+
+  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:40px 20px 48px;}
+  .lead{color:var(--ink-soft);font-size:16px;margin-bottom:22px;}
+  .perks{list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .perks li{display:flex;gap:10px;font-size:15px;color:var(--ink);font-weight:600;}
+  .perks li::before{content:"-";color:var(--violet-dark);flex-shrink:0;}
+
+  /* форма — как на сайте */
+  form.lead-form{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:28px;}
+  @media (max-width:420px){ form.lead-form{padding:22px 18px;} }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:7px;color:var(--ink);}
+  .field input,.field select{
+    width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:4px;
+    font-family:'Manrope',sans-serif;font-size:16px;background:var(--cream);color:var(--ink);
+  }
+  .field select{appearance:auto;}
+  .field input:focus,.field select:focus{outline:2px solid var(--violet);outline-offset:1px;border-color:var(--violet);}
+  #name{font-weight:700;}
+  .phone-field{position:relative;}
+  .phone-field .phone-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--ink);pointer-events:none;font-size:16px;}
+  .phone-field input{padding-left:38px;font-weight:700;}
+  .checkbox-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;}
+  .checkbox-row input{width:16px;height:16px;margin-top:3px;flex-shrink:0;accent-color:var(--violet);}
+  .checkbox-row label{font-size:13px;color:var(--ink-soft);line-height:1.4;}
+  .checkbox-row a{text-decoration:underline;}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--violet);color:var(--on-dark);
+    padding:17px 32px;border-radius:var(--radius-btn);
+    font-weight:700;font-size:16px;border:none;cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+    font-family:'Manrope',sans-serif;line-height:1;
+  }
+  .btn:hover{background:var(--violet-dark);}
+  .btn:active{transform:scale(0.98);}
+  .btn[disabled]{opacity:.65;cursor:default;}
+  @keyframes btn-pulse{
+    0%{box-shadow:0 0 0 0 rgba(122,93,172,0.45);}
+    70%{box-shadow:0 0 0 12px rgba(122,93,172,0);}
+    100%{box-shadow:0 0 0 0 rgba(122,93,172,0);}
+  }
+  .btn-pulse{animation:btn-pulse 2.6s ease-out infinite;}
+  .btn-pulse:hover,.btn[disabled]{animation-play-state:paused;}
+  @media (prefers-reduced-motion: reduce){ .btn-pulse{animation:none;} }
+
+  .error{color:var(--err);font-size:14px;font-weight:600;margin-top:14px;}
+  .error:empty{margin:0;}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+  .form-success{display:none;text-align:center;padding:40px 20px;background:var(--surface);border:1px solid var(--line);border-radius:6px;}
+  .form-success.show{display:block;}
+  .form-success svg{width:44px;height:44px;color:var(--violet);margin:0 auto 16px;display:block;stroke-linecap:round;stroke-linejoin:round;}
+  .form-success h3{font-size:20px;margin-bottom:8px;}
+  .form-success p{color:var(--ink-soft);font-size:15px;}
+
+  footer{padding:0 20px 32px;text-align:center;font-size:13px;color:var(--ink-soft);}
+  footer a{color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <img src="/images/music-club.png" alt="Music Club">
+      <span>MUSIC&nbsp;CLUB</span>
+    </a>
+    <a class="back" href="/">На сайт школы</a>
+  </div>
+</header>
+
+<main>
+  <div id="formBox">
+    <h1>Записаться на бесплатный пробный урок</h1>
+    <p class="lead">Оставьте контакты - администратор свяжется с вами, чтобы подобрать направление и удобное время.</p>
+    <ul class="perks">
+      <li>Пробное занятие - бесплатно, прийти можно уже на этой неделе</li>
+      <li>Поможем выбрать направление, если ещё не решили</li>
+      <li>Свяжемся с вами в день заявки</li>
+    </ul>
+
+    <form class="lead-form" id="leadForm" novalidate>
+      <div class="field">
+        <label for="name">Имя</label>
+        <input type="text" id="name" name="name" placeholder="Как вас зовут" autocomplete="given-name" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Телефон</label>
+        <div class="phone-field">
+          <span class="phone-prefix">+7</span>
+          <input type="tel" id="phone" name="phone" placeholder="(___) ___-__-__" inputmode="numeric" autocomplete="tel-national" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="direction">Направление</label>
+        <select id="direction" name="direction">
+          <option value="">Пока не решил(а) - посоветуйте</option>
+          <option>Вокал</option>
+          <option>Гитара</option>
+          <option>Барабаны</option>
+          <option>Фортепиано</option>
+          <option>Актёрское мастерство</option>
+          <option>Ораторское искусство</option>
+        </select>
+      </div>
+
+      <!-- ловушка для ботов -->
+      <div class="hp" aria-hidden="true"><input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="consent" required>
+        <label for="consent">Согласен(на) с <a href="/privacy/" target="_blank" rel="noopener">политикой обработки персональных данных</a> и даю <a href="/privacy/#consent" target="_blank" rel="noopener">согласие на обработку персональных данных</a></label>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-pulse">Записаться на пробный урок</button>
+      <p class="error" id="err" role="alert"></p>
+    </form>
+  </div>
+
+  <div class="form-success" id="doneBox">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+    <h3>Заявка принята</h3>
+    <p>Мы перезвоним вам в течение дня, чтобы подобрать удобное время.</p>
+  </div>
+</main>
+
+<footer>
+  Music Club, школа музыки в Калуге · ул. Ленина, 79 · <a href="tel:+79200988003">+7 (920) 098-80-03</a>
+</footer>
 
 <script>
 (function () {
   var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','yclid'];
-  var form = document.getElementById('leadForm');
   var params = new URLSearchParams(location.search);
 
-  // 1. Запоминаем метки (первый источник сохраняется на всё время визита)
+  // запоминаем источник перехода на время визита
   try {
-    keys.forEach(function (k) {
-      if (params.get(k)) sessionStorage.setItem('lead_' + k, params.get(k));
-    });
+    keys.forEach(function (k) { if (params.get(k)) sessionStorage.setItem('lead_' + k, params.get(k)); });
   } catch (e) {}
 
-  // 2. Подставляем метки в скрытые поля
-  keys.forEach(function (k) {
-    var v = params.get(k);
-    try { v = v || sessionStorage.getItem('lead_' + k); } catch (e) {}
-    if (form.elements[k]) form.elements[k].value = v || '';
-  });
-  form.elements.page.value = location.pathname;
+  function leadSource() {
+    var out = {};
+    keys.forEach(function (k) {
+      var v = params.get(k);
+      try { v = v || sessionStorage.getItem('lead_' + k); } catch (e) {}
+      out[k] = v || '';
+    });
+    return out;
+  }
 
-  // 3. Телефон: оставляем только допустимые символы
-  form.elements.phone.addEventListener('input', function (e) {
-    e.target.value = e.target.value.replace(/[^\d+()\-\s]/g, '');
-  });
-
+  var form = document.getElementById('leadForm');
+  var phone = document.getElementById('phone');
   var err = document.getElementById('err');
   var btn = document.getElementById('submitBtn');
+  var btnText = btn.textContent;
+
+  // маска телефона: (999) 999-99-99, код страны +7 уже стоит слева
+  function onlyTen(value) {
+    var d = value.replace(/\D/g, '');
+    if (d.length > 10 && (d[0] === '7' || d[0] === '8')) d = d.slice(1);
+    return d.slice(0, 10);
+  }
+  function fmt(d) {
+    var s = '';
+    if (d.length > 0) s += '(' + d.slice(0, 3);
+    if (d.length >= 3) s += ') ';
+    if (d.length > 3) s += d.slice(3, 6);
+    if (d.length > 6) s += '-' + d.slice(6, 8);
+    if (d.length > 8) s += '-' + d.slice(8, 10);
+    return s;
+  }
+  phone.addEventListener('input', function () { phone.value = fmt(onlyTen(phone.value)); });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     err.textContent = '';
 
-    var f = form.elements;
-    var digits = f.phone.value.replace(/\D/g, '');
-    // 8920… и 7920… приводим к 10 цифрам без кода страны
-    if (digits.length === 11 && (digits[0] === '7' || digits[0] === '8')) digits = digits.slice(1);
-    if (!f.name.value.trim()) return err.textContent = 'Укажите имя';
-    if (digits.length !== 10) return err.textContent = 'Проверьте номер телефона';
-    if (!f.consent.checked) return err.textContent = 'Нужно согласие на обработку данных';
+    var name = document.getElementById('name').value.trim();
+    var digits = onlyTen(phone.value);
+    if (!name) { err.textContent = 'Укажите имя'; return; }
+    if (digits.length !== 10) { err.textContent = 'Проверьте номер телефона'; return; }
+    if (!document.getElementById('consent').checked) { err.textContent = 'Нужно согласие на обработку данных'; return; }
 
     btn.disabled = true;
-    btn.textContent = 'Отправляем…';
+    btn.textContent = 'Отправляем...';
 
-    var data = {};
-    new FormData(form).forEach(function (v, k) { data[k] = v; });
-    data.phone = '+7' + digits;
+    var data = Object.assign({
+      name: name,
+      phone: '+7' + digits,
+      direction: document.getElementById('direction').value,
+      website: document.getElementById('website').value
+    }, leadSource());
 
     fetch('https://music-club-leads.killreal2227.workers.dev', {
       method: 'POST',
@@ -167,12 +291,13 @@ ym(113165711, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true
     .then(function () {
       try { if (window.ym) ym(113165711, 'reachGoal', 'lead_form_success'); } catch (e) {}
       document.getElementById('formBox').style.display = 'none';
-      document.getElementById('doneBox').style.display = 'block';
+      document.getElementById('doneBox').classList.add('show');
+      window.scrollTo(0, 0);
     })
     .catch(function () {
-      err.textContent = 'Не удалось отправить. Попробуйте ещё раз или позвоните нам.';
+      err.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам: +7 (920) 098-80-03.';
       btn.disabled = false;
-      btn.textContent = 'Записаться';
+      btn.textContent = btnText;
     });
   });
 })();
